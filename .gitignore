@@ -1,0 +1,12 @@
+node_modules/
+coverage/
+.env*
+.DS_Store
+
+# Terraform: estado e variáveis locais nunca vão para o repositório
+infra/.terraform/
+infra/*.tfstate
+infra/*.tfstate.*
+infra/*.tfvars
+!infra/terraform.tfvars.example
+infra/crash.log

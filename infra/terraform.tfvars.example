@@ -1,0 +1,7 @@
+# Copie para terraform.tfvars e ajuste se quiser (o terraform.tfvars não vai para o Git).
+# Todos os valores abaixo já são o padrão.
+
+regiao             = "us-east-1"
+projeto            = "biblioteca"
+tag_imagem         = "latest"
+quantidade_tarefas = 1
