@@ -1,5 +1,4 @@
-# Copie para terraform.tfvars e ajuste se quiser (o terraform.tfvars não vai para o Git).
-# Todos os valores abaixo já são o padrão.
+# Exemplo de terraform.tfvars
 
 regiao             = "us-east-1"
 projeto            = "biblioteca"

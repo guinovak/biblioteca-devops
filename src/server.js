@@ -6,7 +6,7 @@ const servidor = criarApp().listen(porta, () => {
   console.log(`Biblioteca ouvindo na porta ${porta}`);
 });
 
-// O ECS manda SIGTERM antes de parar a tarefa: fecha as conexões e sai limpo
+// Fecha o servidor quando o container é parado
 process.on('SIGTERM', () => {
   servidor.close(() => process.exit(0));
 });

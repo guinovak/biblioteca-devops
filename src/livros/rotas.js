@@ -1,9 +1,6 @@
 const { Router } = require('express');
 const { ErroDeValidacao } = require('./servico');
 
-/**
- * Rotas HTTP de livros. Erros do serviço sobem para o tratador central em app.js.
- */
 function criarRotasDeLivros(servico) {
   const rotas = Router();
 

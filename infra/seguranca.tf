@@ -1,6 +1,4 @@
-# Dois grupos de segurança em cadeia:
-#   internet --80--> ALB --3000--> tarefas da API
-# As tarefas não aceitam nada que não venha do load balancer.
+# internet -> ALB (porta 80) -> API (porta 3000)
 
 resource "aws_security_group" "alb" {
   name        = "${var.projeto}-alb"
@@ -45,7 +43,6 @@ resource "aws_vpc_security_group_ingress_rule" "api_do_alb" {
   to_port                      = var.porta_container
 }
 
-# Saída liberada: a tarefa precisa baixar a imagem do ECR e mandar logs ao CloudWatch
 resource "aws_vpc_security_group_egress_rule" "api_saida" {
   security_group_id = aws_security_group.api.id
   description       = "Saida para ECR e CloudWatch"

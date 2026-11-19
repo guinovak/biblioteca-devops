@@ -1,11 +1,4 @@
-/**
- * Repositório de livros em memória.
- *
- * Na Fase 1 os dados vivem só enquanto o processo está de pé: o foco da fase é
- * o pipeline e a infraestrutura, não a persistência. Trocar por um banco de
- * verdade (ex.: DynamoDB ou RDS) só exige outra implementação com os mesmos
- * métodos.
- */
+// Livros guardados em memória (somem quando a API reinicia)
 function criarRepositorioEmMemoria() {
   const livros = new Map();
   let proximoId = 1;
@@ -25,7 +18,7 @@ function criarRepositorioEmMemoria() {
       return livro;
     },
 
-    // Mescla só os campos informados (usado no empréstimo e na devolução)
+    // altera só os campos enviados
     atualizar(id, dados) {
       const atual = livros.get(id);
       if (!atual) return null;
@@ -34,7 +27,7 @@ function criarRepositorioEmMemoria() {
       return atualizado;
     },
 
-    // Troca o livro inteiro: campo que não veio deixa de existir (usado no PUT)
+    // troca o livro inteiro (PUT)
     substituir(id, livro) {
       if (!livros.has(id)) return null;
       const novo = { ...livro, id };

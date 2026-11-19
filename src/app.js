@@ -9,17 +9,13 @@ const {
 const { criarRotasDeLivros } = require('./livros/rotas');
 const { version } = require('../package.json');
 
-/**
- * Monta a aplicação sem abrir porta, para os testes usarem com o Supertest.
- * Cada chamada cria um repositório novo, então os testes não se contaminam.
- */
+// Cria o app sem abrir a porta (os testes usam assim)
 function criarApp({ repositorio = criarRepositorioEmMemoria() } = {}) {
   const app = express();
   const servico = criarServicoDeLivros(repositorio);
 
   app.use(express.json());
 
-  // Usado pelo health check do Docker, do load balancer e do teste de fumaça do CI
   app.get('/health', (req, res) => {
     res.json({ status: 'ok', versao: version });
   });
@@ -30,8 +26,7 @@ function criarApp({ repositorio = criarRepositorioEmMemoria() } = {}) {
     res.status(404).json({ erro: 'rota não encontrada' });
   });
 
-  // Tratador central: traduz os erros do serviço em status HTTP.
-  // O Express só reconhece tratador de erro com 4 parâmetros, por isso o _next.
+  // Converte os erros em status HTTP (o Express exige os 4 parâmetros)
   app.use((erro, req, res, _next) => {
     if (erro instanceof ErroDeValidacao) return res.status(400).json({ erro: erro.message });
     if (erro instanceof NaoEncontrado) return res.status(404).json({ erro: erro.message });

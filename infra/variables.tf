@@ -1,69 +1,69 @@
 variable "regiao" {
-  description = "Região da AWS. O AWS Academy Learner Lab trabalha em us-east-1."
+  description = "Região da AWS"
   type        = string
   default     = "us-east-1"
 }
 
 variable "projeto" {
-  description = "Prefixo dos nomes de todos os recursos."
+  description = "Prefixo dos nomes dos recursos"
   type        = string
   default     = "biblioteca"
 
   validation {
     condition     = can(regex("^[a-z][a-z0-9-]{2,20}$", var.projeto))
-    error_message = "Use de 3 a 21 caracteres: letras minúsculas, números e hífen, começando por letra."
+    error_message = "Use letras minúsculas, números e hífen."
   }
 }
 
 variable "cidr_vpc" {
-  description = "Faixa de endereços da VPC."
+  description = "Faixa de IPs da VPC"
   type        = string
   default     = "10.0.0.0/16"
 }
 
 variable "papel_lab" {
-  description = "Papel do IAM que as tarefas do ECS assumem. O Learner Lab não deixa criar papéis, só usar o LabRole que já existe."
+  description = "Papel do IAM usado pelo ECS (no Learner Lab é o LabRole)"
   type        = string
   default     = "LabRole"
 }
 
 variable "tag_imagem" {
-  description = "Tag da imagem no ECR que o serviço vai rodar (o pipeline publica com o SHA do commit)."
+  description = "Tag da imagem no ECR"
   type        = string
   default     = "latest"
 }
 
 variable "porta_container" {
-  description = "Porta em que a API escuta dentro do container."
+  description = "Porta da API no container"
   type        = number
   default     = 3000
 }
 
 variable "cpu" {
-  description = "CPU da tarefa Fargate em unidades (256 = 0,25 vCPU, o menor tamanho)."
+  description = "CPU da tarefa (256 = 0,25 vCPU)"
   type        = number
   default     = 256
 }
 
 variable "memoria" {
-  description = "Memória da tarefa Fargate em MiB (512 é o mínimo para 256 de CPU)."
+  description = "Memória da tarefa em MB"
   type        = number
   default     = 512
 }
 
 variable "quantidade_tarefas" {
-  description = "Quantas cópias da API ficam rodando. 0 desliga a API sem destruir o resto."
+  description = "Quantidade de tarefas rodando"
   type        = number
   default     = 1
 
   validation {
     condition     = var.quantidade_tarefas >= 0 && var.quantidade_tarefas <= 4
-    error_message = "Use de 0 a 4 tarefas, para não estourar o crédito do laboratório."
+    error_message = "Use de 0 a 4 tarefas."
   }
 }
 
 variable "dias_retencao_logs" {
-  description = "Por quantos dias o CloudWatch guarda os logs da API."
+  description = "Dias de retenção dos logs"
   type        = number
   default     = 7
 }
