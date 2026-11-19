@@ -1,7 +1,3 @@
-# Application Load Balancer: endereço público fixo da API.
-# As tarefas do Fargate ganham IP novo a cada deploy; o ALB esconde isso
-# e só manda tráfego para tarefa que passou no health check.
-
 resource "aws_lb" "api" {
   name               = "${var.projeto}-alb"
   load_balancer_type = "application"
@@ -14,10 +10,9 @@ resource "aws_lb_target_group" "api" {
   name        = "${var.projeto}-tg"
   port        = var.porta_container
   protocol    = "HTTP"
-  target_type = "ip" # obrigatório para Fargate (rede awsvpc)
+  target_type = "ip" # necessário no Fargate
   vpc_id      = aws_vpc.principal.id
 
-  # Tempo para terminar requisições em andamento antes de tirar a tarefa
   deregistration_delay = 30
 
   health_check {

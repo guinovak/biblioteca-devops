@@ -1,7 +1,4 @@
-/**
- * Regras de negócio da biblioteca: cadastro de livros, empréstimo e devolução.
- * Não conhece HTTP; quem traduz para status e JSON são as rotas.
- */
+// Regras de negócio da biblioteca
 
 class ErroDeValidacao extends Error {}
 class NaoEncontrado extends Error {}

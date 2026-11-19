@@ -1,8 +1,4 @@
-# Execução da API em containers no ECS com Fargate (aula 4):
-# a AWS cuida dos servidores, pagamos só pelo tempo das tarefas rodando.
-
-# O Learner Lab não deixa criar papéis no IAM; usamos o LabRole existente
-# tanto para o ECS baixar a imagem e gravar logs quanto para a própria tarefa.
+# O Learner Lab não deixa criar papéis no IAM, então usamos o LabRole
 data "aws_iam_role" "lab" {
   name = var.papel_lab
 }
@@ -15,7 +11,6 @@ resource "aws_cloudwatch_log_group" "api" {
 resource "aws_ecs_cluster" "principal" {
   name = "${var.projeto}-cluster"
 
-  # Container Insights cobra por métrica; fica desligado no laboratório
   setting {
     name  = "containerInsights"
     value = "disabled"
@@ -33,7 +28,7 @@ resource "aws_ecs_task_definition" "api" {
 
   runtime_platform {
     operating_system_family = "LINUX"
-    cpu_architecture        = "X86_64" # mesma arquitetura da imagem gerada no GitHub Actions
+    cpu_architecture        = "X86_64"
   }
 
   container_definitions = jsonencode([{
@@ -77,12 +72,10 @@ resource "aws_ecs_service" "api" {
   desired_count   = var.quantidade_tarefas
   launch_type     = "FARGATE"
 
-  # Deploy sem queda: sobe a versão nova antes de tirar a antiga
   deployment_minimum_healthy_percent = 100
   deployment_maximum_percent         = 200
 
-  # Se a versão nova não ficar saudável, o ECS volta sozinho para a anterior
-  # (o rollback automático da aula 3)
+  # volta para a versão anterior se a nova não subir
   deployment_circuit_breaker {
     enable   = true
     rollback = true
@@ -91,7 +84,7 @@ resource "aws_ecs_service" "api" {
   network_configuration {
     subnets          = aws_subnet.publica[*].id
     security_groups  = [aws_security_group.api.id]
-    assign_public_ip = true # sem NAT Gateway, é assim que a tarefa alcança o ECR
+    assign_public_ip = true
   }
 
   load_balancer {
