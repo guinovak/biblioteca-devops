@@ -1,0 +1,35 @@
+# Ambiente local e de staging da API.
+# O pipeline usa este arquivo no job de staging, com a imagem publicada no GHCR.
+#
+#   docker compose up -d --build                     # a partir do código
+#   IMAGEM=ghcr.io/guinovak/biblioteca-devops:<commit> docker compose up -d --no-build
+#   docker compose logs -f api
+#   docker compose down
+
+services:
+  api:
+    image: ${IMAGEM:-biblioteca-api:local}
+    build:
+      context: .
+      args:
+        APP_COMMIT: ${APP_COMMIT:-local}
+    ports:
+      - "${PORTA:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+    restart: unless-stopped
+    read_only: true            # o container não grava no disco
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"         # mesmo tamanho da tarefa no Fargate
+          memory: 512M
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 10s

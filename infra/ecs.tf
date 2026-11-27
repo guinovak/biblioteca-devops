@@ -95,5 +95,11 @@ resource "aws_ecs_service" "api" {
 
   health_check_grace_period_seconds = 30
 
+  # a revisão da task definition em uso é trocada pelo pipeline de CD
+  # (scripts/deploy-ecs.sh); o Terraform não deve desfazer esse deploy
+  lifecycle {
+    ignore_changes = [task_definition]
+  }
+
   depends_on = [aws_lb_listener.http]
 }
