@@ -24,6 +24,14 @@ describe('API da biblioteca', () => {
     });
   });
 
+  test('respostas não revelam o framework nem ficam em cache (achados do ZAP)', async () => {
+    const resposta = await request(app).get('/health');
+
+    expect(resposta.headers['x-powered-by']).toBeUndefined();
+    expect(resposta.headers['cache-control']).toBe('no-store');
+    expect(resposta.headers['x-content-type-options']).toBe('nosniff');
+  });
+
   test('POST /livros cadastra e devolve 201', async () => {
     const resposta = await request(app)
       .post('/livros')
