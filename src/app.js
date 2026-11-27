@@ -17,7 +17,8 @@ function criarApp({ repositorio = criarRepositorioEmMemoria() } = {}) {
   app.use(express.json());
 
   app.get('/health', (req, res) => {
-    res.json({ status: 'ok', versao: version });
+    // commit vem da imagem Docker (build-arg), para saber qual versão está no ar
+    res.json({ status: 'ok', versao: version, commit: process.env.APP_COMMIT || 'local' });
   });
 
   app.use('/livros', criarRotasDeLivros(servico));

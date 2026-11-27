@@ -22,3 +22,8 @@ output "grupo_de_logs" {
   description = "Onde ler os logs da API no CloudWatch."
   value       = aws_cloudwatch_log_group.api.name
 }
+
+output "painel_cloudwatch" {
+  description = "Painel de monitoramento da API no CloudWatch."
+  value       = "https://${var.regiao}.console.aws.amazon.com/cloudwatch/home?region=${var.regiao}#dashboards/dashboard/${aws_cloudwatch_dashboard.api.dashboard_name}"
+}

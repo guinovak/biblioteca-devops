@@ -17,7 +17,11 @@ describe('API da biblioteca', () => {
     const resposta = await request(app).get('/health');
 
     expect(resposta.status).toBe(200);
-    expect(resposta.body).toEqual({ status: 'ok', versao: expect.any(String) });
+    expect(resposta.body).toEqual({
+      status: 'ok',
+      versao: expect.any(String),
+      commit: expect.any(String),
+    });
   });
 
   test('POST /livros cadastra e devolve 201', async () => {
