@@ -14,6 +14,15 @@ function criarApp({ repositorio = criarRepositorioEmMemoria() } = {}) {
   const app = express();
   const servico = criarServicoDeLivros(repositorio);
 
+  // Achados do OWASP ZAP no staging: não revelar o framework (X-Powered-By)
+  // e não deixar respostas da API em cache de navegador ou proxy
+  app.disable('x-powered-by');
+  app.use((req, res, next) => {
+    res.set('Cache-Control', 'no-store');
+    res.set('X-Content-Type-Options', 'nosniff');
+    next();
+  });
+
   app.use(express.json());
 
   app.get('/health', (req, res) => {
